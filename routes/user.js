@@ -70,7 +70,12 @@ router.route('/signup').post((req, res) => {
                 message: 'New user signed up.'
             })
         )
-        .catch(err => res.status(400).json('Error: ' + err));
+        .catch(err => res.send({
+            success: false,
+            message: 'Error:'+err
+        })
+        
+        );
 });
 
 //Delete Operation: Deleting a user (DELETE localhost:5000/user/delete)
@@ -159,5 +164,47 @@ router.route('/changepassword').post((req, res) => {
                 });
 });
 
+//Read Operation: Login (POST localhost:5000/user/login)
+router.route('/login').post((req, res) => {
+    const { body } = req;
+    const {username, password } = body; //username of account to be updated
+    //Data constraints, validations
+    if (!username|| !password || username.length < 4 || password.length < 4) {
+        return res.send({
+            success: false,
+            message: 'Error: Details invalid.'
+        })
+    }
+                //validate password
+                User.find({
+                    username: username
+                }, (err, users) => {
+                    if (err) {
+                        return res.send({
+                            success: false,
+                            message: 'Error:Server error'
+                        })
+                    }
+                    if (users.length != 1) {
+                        return res.send({
+                            success: false,
+                            message: 'Error : Invalid username'
+                        })
+                    }
+                    const user = users[0];
+                    if (!user.validPassword(password)) {
+                        return res.send({
+                            success: false,
+                            message: 'Error :Invalid password'
+                        })
+                    }
+                    //valid login
+                    return res.send({
+                        success: true,
+                        message: 'Valid login.'
+                    })
+            
+                });
+});
 
 module.exports = router;
