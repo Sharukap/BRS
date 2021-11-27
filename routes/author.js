@@ -9,7 +9,7 @@ router.route('/hello').get((req, res) => {
     })
 })
 
-// add new author (POST localhost:5000/book/newbook)
+// add new author (POST localhost:5000/author/newauthor)
 router.route('/newauthor').post((req, res) => {
     
     const { body } = req;
@@ -35,6 +35,30 @@ router.route('/newauthor').post((req, res) => {
         )
         .catch(err => res.status(400).json('Error: ' + err));
 });
+
+//View list of Authors (GET localhost:5000/author/list)
+router.route('/list').get((req, res) => {
+    Author.find({
+    }, (err, authorList) => {
+        if (err) {
+            return res.send({
+                success: false,
+                message: 'Error:Server error'
+            })
+        } else {
+            let data = [];
+            for (i in authorList) {
+                data.push(authorList[i]);
+            }
+
+            return res.send({
+                success: true,
+                message: 'List received',
+                data: data
+            })
+        }
+    })
+})
 
 
 module.exports = router;
