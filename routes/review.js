@@ -17,7 +17,7 @@ router.route('/createReview').post((req, res) => {
     if (rating < 0 || rating > 5) {
         return res.send({
             success: false,
-            message: 'Error: Rating can not be less than 0 or greater than 5.'
+            message: 'Error: Rating can not be less than 0 or greater than 5'
         })
     }
     
@@ -28,7 +28,7 @@ router.route('/createReview').post((req, res) => {
         .then(() =>
             res.send({
                 success: true,
-                message: 'New Review Created .'
+                message: 'New Review Created'
             })
         )
         .catch(err => res.status(400).json('Error: ' + err));
@@ -82,6 +82,42 @@ router.route('/delete').delete((req, res) => {
             })
         }
     });
+});
+
+//Update Operation
+router.route('/update').post((req, res) => {
+    const {body} = req;
+    const { _id, newTitle, newBody, newRating} = body;
+    
+    if (newRating < 0 || newRating > 5) {
+        return res.send({
+            success: false,
+            message: 'Error: Rating can not be less than 0 or greater than 5'
+        })
+    }
+    
+        //Update
+        Review.findOneAndUpdate({
+            _id: _id
+        },{$set:{reviewTitle: newTitle, 
+                reviewBody:  newBody, 
+                rating: newRating}},
+                
+        (err) => {
+            if (err) {
+                return res.send({
+                    success: false,
+                    message: 'Error:'+err
+                })
+            }
+            else {
+                return res.send({
+                    success: true,
+                    message: 'Review updated.'
+                })
+            }
+        })
+    
 });
 
 module.exports = router;
