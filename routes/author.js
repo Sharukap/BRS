@@ -11,10 +11,10 @@ router.route('/hello').get((req, res) => {
 
 // add new author (POST localhost:5000/author/newauthor)
 router.route('/newauthor').post((req, res) => {
-    
+
     const { body } = req;
-    const { name } = body; 
-    
+    const { name } = body;
+
     console.log(req.body);
 
     if (!name) {
@@ -24,7 +24,7 @@ router.route('/newauthor').post((req, res) => {
         })
     }
     const newauthor = new Author(req.body);
-    
+
     console.log(newauthor);
     newauthor.save()
         .then(() =>
@@ -63,23 +63,65 @@ router.route('/list').get((req, res) => {
 //delete an author
 router.route('/remove').delete((req, res) => {
     const { body } = req;
-    const { name } = body; 
+    const { name } = body;
 
-    Author.findOneAndDelete({name: name}, //deletion condition
+    Author.findOneAndDelete({ name: name }, //deletion condition
         function (err, docs) {
-        if (err){
-            res.send({
+            if (err) {
+                res.send({
+                    success: false,
+                    message: 'Error: Deletion error'
+                })
+            }
+            else {
+                res.send({
+                    success: true,
+                    message: 'Author successfully removed from system',
+                    deleted_docs: docs
+                })
+            }
+        });
+});
+
+//update author details
+router.route('/update').post((req, res) => {
+    const { body } = req;
+    const { name } = body;
+    Author.find({
+        name: name
+    }, (err, authors) => {
+        if (err) {
+            return res.send({
                 success: false,
-                message: 'Error: Deletion error'
+                message: 'Error:Server error'
             })
         }
-        else{
-            res.send({
-                success: true,
-                message: 'Author successfully removed from system',
-                deleted_docs:docs
+        if (authors.length != 1) {
+            return res.send({
+                success: false,
+                message: 'Error : Author does not exist'
             })
         }
+        const author = authors[0];
+        console.log(author);
+        author.findOneAndUpdate({
+            name: name
+        }, null,
+            (err, author) => {
+                if (err) {
+                    return res.send({
+                        success: false,
+                        message: 'Error: Server error'
+                    })
+                }
+                else {
+                    return res.send({
+                        success: true,
+                        message: 'Author details updated.'
+                    })
+                }
+            })
+
     });
 });
 
