@@ -1,6 +1,12 @@
 const router = require('express').Router();
+const path = require('path'); // include for hanlding path to html files
 let Book = require('../model/book.model');
 
+
+ router.route('/home').get((req, res) => {
+    res.sendFile(path.join(__dirname, 'frontend/index.html')); 
+}); 
+ 
 // create new book (POST localhost:5000/book/newbook)
 router.route('/newbook').post((req, res) => {
     

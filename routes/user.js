@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const path = require('path'); // include for hanlding path to html files
 let User = require('../model/user.model');
 
 //test route
@@ -8,6 +9,9 @@ router.route('/hello').get((req, res) => {
         message: 'Hello!!!'
     })
 })
+router.route('/signin').get((req, res) => {
+    res.sendFile(path.join(__dirname, 'frontend/login.html')); 
+}); 
 
 //Read operation: List users  (GET localhost:5000/user/list)
 router.route('/list').get((req, res) => {
