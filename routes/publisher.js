@@ -111,8 +111,8 @@ router.route('/update').post((req, res) => {
     }
     
         //Update
-        Publisher.findByIdAndUpdate({
-            regNo: parseInt(regNo)
+        Publisher.findOneAndUpdate({
+            regNo: regNo
         },{$set:{name: newName, 
                 location: newLocation, 
                 contactNo: newContactNo}},
@@ -121,7 +121,7 @@ router.route('/update').post((req, res) => {
             if (err) {
                 return res.send({
                     success: false,
-                    message: 'Error: Server error'
+                    message: 'Error:'+err
                 })
             }
             else {
