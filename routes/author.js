@@ -60,5 +60,27 @@ router.route('/list').get((req, res) => {
     })
 })
 
+//delete an author
+router.route('/remove').delete((req, res) => {
+    const { body } = req;
+    const { name } = body; 
+
+    Author.findOneAndDelete({name: name}, //deletion condition
+        function (err, docs) {
+        if (err){
+            res.send({
+                success: false,
+                message: 'Error: Deletion error'
+            })
+        }
+        else{
+            res.send({
+                success: true,
+                message: 'Author successfully removed from system',
+                deleted_docs:docs
+            })
+        }
+    });
+});
 
 module.exports = router;
