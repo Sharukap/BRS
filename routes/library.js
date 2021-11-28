@@ -135,6 +135,8 @@ router.route('/delete').delete((req,res)=>{
 
 //Update Operation 
 
+//Update Operation 
+
 router.route("/update").post((req, res) => {
   const { body } = req;
   const { libNo, libName, address, associatedInstitute, librarianName, numberofStaff } = body;
@@ -149,7 +151,7 @@ router.route("/update").post((req, res) => {
   //Update
   Library.findOneAndUpdate(
     {
-      libNo : libNo,
+      libNo : libNo
     },
     { $set: { libName: newlibName, address : newaddress, associatedInstitute: newassociatedInstitute, librarianName : newlibrarianName, numberofStaff: newnumberofStaff } },
 
