@@ -134,54 +134,40 @@ router.route('/delete').delete((req,res)=>{
 });
 
 //Update Operation 
-router.route('/update').post((req,res)=>{
-    const {body} = req;
-    const {
-      libNo,
-      libName,
-      address,
-      associatedInstitute,
-      librarianName,
-      numberofStaff,
-    } = body;
 
-    if(!libNo|| libNo.length<4){
+//Update Operation 
+
+router.route("/update").post((req, res) => {
+  const { body } = req;
+  const { libNo, libName, address, associatedInstitute, librarianName, numberofStaff } = body;
+
+  if (!libNo || libNo.length<4) {
+    return res.send({
+      success: false,
+      message: "Error : Invalid Library Registration number",
+    });
+  }
+
+  //Update
+  Library.findOneAndUpdate(
+    {
+      libNo : libNo
+    },
+    { $set: { libName: newlibName, address : newaddress, associatedInstitute: newassociatedInstitute, librarianName : newlibrarianName, numberofStaff: newnumberofStaff } },
+
+    (err) => {
+      if (err) {
         return res.send({
-            success: false,
-            message: 'Error: Invaild Library Reg number'
-        })
-    }
-
-    //Update
-    Library.findOneAndUpdate(
-      {
-        libNo: libNo,
-      },
-      {
-        $set: {
-          libName: newLibName,
-          address: newaddress,
-          associatedInstitute: associatedInstitute,
-          librarianName: newlibrarianName,
-          numberofStaff: newnumberofStaff,
-        },
-      },
-
-      (err) => {
-        if (err) {
-          return res.send({
-            success: false,
-            message: "Error: " + err,
-          });
-        } else {
-          return res.send({
-            success: true,
-            message: "Library details updated",
-          });
-        }
+          success: false,
+          message: "Error:" + err,
+        });
+      } else {
+        return res.send({
+          success: true,
+          message: "Library details successfully updated.",
+        });
       }
-    );
+    }
+  );
 });
-
-
 module.exports = router;
