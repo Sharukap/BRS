@@ -29,6 +29,7 @@ const bookSchema = new Schema({
   published:{type:String},
   availability:{type:String},
   review:[reviewSchema] //-- THE REVIEW SCHEMA WAS nested within Book Schema for efficiency
+
 }, { strict: false}
 );
 
