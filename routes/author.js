@@ -1,13 +1,6 @@
 const router = require('express').Router();
 let Author = require('../model/author.model');
 
-//test route
-router.route('/hello').get((req, res) => {
-    return res.send({
-        success: true,
-        message: 'Hello!'
-    })
-})
 
 // add new author (POST localhost:5000/author/newauthor)
 router.route('/newauthor').post((req, res) => {
