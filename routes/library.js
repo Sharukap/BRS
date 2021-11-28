@@ -29,7 +29,7 @@ router.route("/list").get((req, res) => {
         let numberofStaff = libraryList[i].numberofStaff;
         data.push({
           libNo: libNo,
-          name: libName,
+          libName: libName,
           address: address,
           associatedInstitute: associatedInstitute,
           librarianName: librarianName,
@@ -135,11 +135,9 @@ router.route('/delete').delete((req,res)=>{
 
 //Update Operation 
 
-//Update Operation 
-
 router.route("/update").post((req, res) => {
   const { body } = req;
-  const { libNo, libName, address, associatedInstitute, librarianName, numberofStaff } = body;
+  const { libNo, newlibName, newaddress, newassociatedInstitute, newlibrarianName, newnumberofStaff } = body;
 
   if (!libNo || libNo.length<4) {
     return res.send({
@@ -152,8 +150,11 @@ router.route("/update").post((req, res) => {
   Library.findOneAndUpdate(
     {
       libNo : libNo
-    },
-    { $set: { libName: newlibName, address : newaddress, associatedInstitute: newassociatedInstitute, librarianName : newlibrarianName, numberofStaff: newnumberofStaff } },
+    },{ $set: { libName: newlibName, 
+        address : newaddress, 
+        associatedInstitute: newassociatedInstitute, 
+        librarianName : newlibrarianName, 
+        numberofStaff: newnumberofStaff }},
 
     (err) => {
       if (err) {
@@ -167,7 +168,6 @@ router.route("/update").post((req, res) => {
           message: "Library details successfully updated.",
         });
       }
-    }
-  );
+    })
 });
 module.exports = router;
