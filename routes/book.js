@@ -166,5 +166,36 @@ router.route('/newreview').post((req, res, next) => {
    
 })
 
+//listing reviews
+router.route('/listreview').get((req, res, next) => {
+    const { body } = req;
+    const { isbn } = body; 
+    Book.find({
+        isbn:isbn
+    },(err,books)=>{
+        if (err) {
+            return res.send({
+                success: false,
+                message: 'Error:Server error'
+            })
+        }
+        if (books.length != 1) {
+            return res.send({
+                success: false,
+                message: 'Error : book does not exist'
+            })
+        }
+        const book = books[0];
+        const data = book.review
+        return res.send({
+            success: true,
+            message: 'List received',
+            data: data
+        })
+        
+    });
+
+   
+})
 
 module.exports = router;
