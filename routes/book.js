@@ -58,7 +58,7 @@ router.route('/list').get((req, res) => {
     })
 })
 
-//update books
+//update book availability
 router.route('/updateavailability').post((req, res) => {
     const { body } = req;
     const {isbn,availability } = body; //isbn of the book
@@ -102,6 +102,8 @@ router.route('/updateavailability').post((req, res) => {
     });
 });
 
+//delete books
+
 router.route('/remove').delete((req, res) => {
     const { body } = req;
     const { isbn } = body; 
@@ -124,6 +126,45 @@ router.route('/remove').delete((req, res) => {
     });
 });
 //delete book
+
+
+
+
+//Individual contribution of  185016T Collure K.S
+// Adding a new review to a book
+router.route('/newreview').post((req, res, next) => {
+    const { body } = req;
+    const { isbn } = body; 
+    Book.find({
+        isbn:isbn
+    },(err,books)=>{
+        if (err) {
+            return res.send({
+                success: false,
+                message: 'Error:Server error'
+            })
+        }
+        if (books.length != 1) {
+            return res.send({
+                success: false,
+                message: 'Error : book does not exist'
+            })
+        }
+        const book = books[0];
+        book.review.push(req.body);
+        book.save()
+        .then(() =>
+            res.send({
+                success: true,
+                message: 'New review added.'
+            })
+        )
+        .catch(err => res.status(400).json('Error: ' + err));
+        
+    });
+
+   
+})
 
 
 module.exports = router;
