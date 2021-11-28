@@ -86,7 +86,7 @@ router.route('/remove').delete((req, res) => {
 //update author details
 router.route('/update').post((req, res) => {
     const { body } = req;
-    const { name } = body;
+    const { name, nationality, authorDesc, genreSpec } = body;
     Author.find({
         name: name
     }, (err, authors) => {
@@ -104,9 +104,9 @@ router.route('/update').post((req, res) => {
         }
         const author = authors[0];
         console.log(author);
-        author.findOneAndUpdate({
+        Author.findOneAndUpdate({
             name: name
-        }, null,
+        }, { $set: { genreSpec: genreSpec, authorDesc: authorDesc, nationality: nationality } },null,
             (err, author) => {
                 if (err) {
                     return res.send({
