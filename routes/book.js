@@ -1,6 +1,12 @@
 const router = require('express').Router();
+const path = require('path'); // include for hanlding path to html files
 let Book = require('../model/book.model');
 
+
+ router.route('/home').get((req, res) => {
+    res.sendFile(path.join(__dirname, 'frontend/index.html')); 
+}); 
+ 
 // create new book (POST localhost:5000/book/newbook)
 router.route('/newbook').post((req, res) => {
     
@@ -52,7 +58,7 @@ router.route('/list').get((req, res) => {
     })
 })
 
-//update books
+//update book availability
 router.route('/updateavailability').post((req, res) => {
     const { body } = req;
     const {isbn,availability } = body; //isbn of the book
@@ -96,6 +102,8 @@ router.route('/updateavailability').post((req, res) => {
     });
 });
 
+//delete books
+
 router.route('/remove').delete((req, res) => {
     const { body } = req;
     const { isbn } = body; 
@@ -119,5 +127,75 @@ router.route('/remove').delete((req, res) => {
 });
 //delete book
 
+
+
+
+//Individual contribution of  185016T Collure K.S
+// Adding a new review to a book
+router.route('/newreview').post((req, res, next) => {
+    const { body } = req;
+    const { isbn } = body; 
+    Book.find({
+        isbn:isbn
+    },(err,books)=>{
+        if (err) {
+            return res.send({
+                success: false,
+                message: 'Error:Server error'
+            })
+        }
+        if (books.length != 1) {
+            return res.send({
+                success: false,
+                message: 'Error : book does not exist'
+            })
+        }
+        const book = books[0];
+        book.review.push(req.body);
+        book.save()
+        .then(() =>
+            res.send({
+                success: true,
+                message: 'New review added.'
+            })
+        )
+        .catch(err => res.status(400).json('Error: ' + err));
+        
+    });
+
+   
+})
+
+//listing reviews
+router.route('/listreview').get((req, res, next) => {
+    const { body } = req;
+    const { isbn } = body; 
+    Book.find({
+        isbn:isbn
+    },(err,books)=>{
+        if (err) {
+            return res.send({
+                success: false,
+                message: 'Error:Server error'
+            })
+        }
+        if (books.length != 1) {
+            return res.send({
+                success: false,
+                message: 'Error : book does not exist'
+            })
+        }
+        const book = books[0];
+        const data = book.review
+        return res.send({
+            success: true,
+            message: 'List received',
+            data: data
+        })
+        
+    });
+
+   
+})
 
 module.exports = router;

@@ -134,9 +134,10 @@ router.route('/delete').delete((req,res)=>{
 });
 
 //Update Operation 
+
 router.route("/update").post((req, res) => {
   const { body } = req;
-  const { libNo, libName, address, associatedInstitute, librarianName, numberofStaff } = body;
+  const { libNo, newlibName, newaddress, newassociatedInstitute, newlibrarianName, newnumberofStaff } = body;
 
   if (!libNo || libNo.length<4) {
     return res.send({
@@ -148,9 +149,12 @@ router.route("/update").post((req, res) => {
   //Update
   Library.findOneAndUpdate(
     {
-      libNo: libNo,
-    },
-    { $set: { libName: libName, address: address, associatedInstitute:associatedInstitute, librarianName: librarianName, numberofStaff: numberofStaff } },
+      libNo : libNo
+    },{ $set: { libName: newlibName, 
+        address : newaddress, 
+        associatedInstitute: newassociatedInstitute, 
+        librarianName : newlibrarianName, 
+        numberofStaff: newnumberofStaff }},
 
     (err) => {
       if (err) {
@@ -161,10 +165,9 @@ router.route("/update").post((req, res) => {
       } else {
         return res.send({
           success: true,
-          message: "Library details updated.",
+          message: "Library details successfully updated.",
         });
       }
-    }
-  );
+    })
 });
 module.exports = router;
