@@ -5,7 +5,7 @@ let Author = require('../model/author.model');
 router.route('/hello').get((req, res) => {
     return res.send({
         success: true,
-        message: 'Hello! (config author.js)'
+        message: 'Hello!'
     })
 })
 
