@@ -29,7 +29,7 @@ router.route("/list").get((req, res) => {
         let numberofStaff = libraryList[i].numberofStaff;
         data.push({
           libNo: libNo,
-          name: libName,
+          libName: libName,
           address: address,
           associatedInstitute: associatedInstitute,
           librarianName: librarianName,
@@ -134,54 +134,37 @@ router.route('/delete').delete((req,res)=>{
 });
 
 //Update Operation 
-router.route('/update').post((req,res)=>{
-    const {body} = req;
-    const {
-      libNo,
-      libName,
-      address,
-      associatedInstitute,
-      librarianName,
-      numberofStaff,
-    } = body;
+router.route("/update").post((req, res) => {
+  const { body } = req;
+  const { libNo, libName, address, associatedInstitute, librarianName, numberofStaff } = body;
 
-    if(!libNo|| libNo.length<4){
+  if (!libNo || libNo.length<4) {
+    return res.send({
+      success: false,
+      message: "Error : Invalid Library Registration number",
+    });
+  }
+
+  //Update
+  Library.findOneAndUpdate(
+    {
+      libNo: libNo,
+    },
+    { $set: { libName: libName, address: address, associatedInstitute:associatedInstitute, librarianName: librarianName, numberofStaff: numberofStaff } },
+
+    (err) => {
+      if (err) {
         return res.send({
-            success: false,
-            message: 'Error: Invaild Library Reg number'
-        })
-    }
-
-    //Update
-    Library.findOneAndUpdate(
-      {
-        libNo: libNo,
-      },
-      {
-        $set: {
-          libName: newLibName,
-          address: newaddress,
-          associatedInstitute: associatedInstitute,
-          librarianName: newlibrarianName,
-          numberofStaff: newnumberofStaff,
-        },
-      },
-
-      (err) => {
-        if (err) {
-          return res.send({
-            success: false,
-            message: "Error: " + err,
-          });
-        } else {
-          return res.send({
-            success: true,
-            message: "Library details updated",
-          });
-        }
+          success: false,
+          message: "Error:" + err,
+        });
+      } else {
+        return res.send({
+          success: true,
+          message: "Library details updated.",
+        });
       }
-    );
+    }
+  );
 });
-
-
 module.exports = router;
