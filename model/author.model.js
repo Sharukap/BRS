@@ -6,10 +6,6 @@ const authorSchema = new Schema({
   genreSpec: { type: String, required: true },
   authorDesc: { type: String, required: true },
   nationality: { type: String, required: true },
-  books: {
-    type:mongoose.Schema.Types.ObjectId,
-    ref:'book'
-  },
 },{strict: false}
 );
 
