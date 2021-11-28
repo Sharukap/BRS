@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Review = require('./review.model');
+const Category = require('./category.model');
 const Schema = mongoose.Schema;
 
 //Individual contribution of  185016T Collure K.S 
@@ -23,10 +24,14 @@ const bookSchema = new Schema({
   },
   bookshelf: {
     type:mongoose.Schema.Types.ObjectId,
-    ref:'category'
+    ref:'Category'
   },
   language:{type:String},
   published:{type:String},
+  library:{
+    type:mongoose.Schema.Types.ObjectId,
+    ref:'Library'
+  },
   availability:{type:String},
   review:[reviewSchema] //-- THE REVIEW SCHEMA WAS nested within Book Schema for efficiency
 }, { strict: false}

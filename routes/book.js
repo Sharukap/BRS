@@ -1,11 +1,10 @@
 const router = require('express').Router();
-const path = require('path'); // include for hanlding path to html files
 let Book = require('../model/book.model');
+let Author = require('../model/author.model');
+let Category = require('../model/category.model');
 
 
- router.route('/home').get((req, res) => {
-    res.sendFile(path.join(__dirname, 'frontend/index.html')); 
-}); 
+
  
 // create new book (POST localhost:5000/book/newbook)
 router.route('/newbook').post((req, res) => {
@@ -58,6 +57,24 @@ router.route('/list').get((req, res) => {
     })
 })
 
+//List books with populated data from author and category  (GET localhost:5000/book/listmore) 
+router.route('/listmore').get((req, res) => {
+    Book.find({})
+    .populate('author')
+    .populate('bookshelf')
+    .then((books)=>{
+        const data = books
+        return res.send({
+            success: true,
+            message: 'Book list',
+            data: data
+        })
+    }
+
+    )
+    
+})
+
 //update book availability
 router.route('/updateavailability').post((req, res) => {
     const { body } = req;
@@ -106,9 +123,8 @@ router.route('/updateavailability').post((req, res) => {
 
 router.route('/remove').delete((req, res) => {
     const { body } = req;
-    const { isbn } = body; 
-
-    Book.findOneAndDelete({isbn: isbn}, //deletion condition
+    const { id } = body; 
+    Book.findByIdAndDelete(id, //deletion condition
         function (err, docs) {
         if (err){
             res.send({
@@ -125,13 +141,9 @@ router.route('/remove').delete((req, res) => {
         }
     });
 });
-//delete book
-
-
 
 
 //Individual contribution of  185016T Collure K.S
-// Adding a new review to a book
 router.route('/newreview').post((req, res, next) => {
     const { body } = req;
     const { isbn } = body; 
@@ -194,8 +206,6 @@ router.route('/listreview').get((req, res, next) => {
         })
         
     });
-
-   
 })
 
 module.exports = router;
